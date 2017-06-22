@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+
+<meta charset="utf-8" />
+<title>Chart.js demo</title>
+<head>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="app.js"></script>
+
+
+</head>
+
+<body>
+
+<div class="chart-container" style="position: relative; height:20vh; width:40vw; color:#0000FF; align:center ">
+    <canvas id="myChart"></canvas>
+</div>
+	<!-- <canvas id="myChart" ></canvas> -->
+
+	<script>
+		$(document)
+				.ready(
+						function() {
+							$
+									.ajax({
+										url : "http://localhost:9090/IntelliRec/appdata.json",
+										method : "GET",
+										success : function(data) {
+											console.log(data);
+											var player = [];
+											var score = [];
+
+											for ( var i in data) {
+												player.push(" "
+														+ data[i].tradeid);
+												score.push(data[i].tradevalue);
+												console
+														.log('reached in data loop')
+											}
+											var chartdata = {
+												labels : player,
+												datasets : [ {
+													label : 'Trade Volume',
+													fill : false,
+													lineTension : 0,													
+													//backgroundColor : 'rgb(255, 255, 255)',
+													borderColor : 'rgb(0, 206, 206)',
+													//hoverBackgroundColor : 'rgba(200, 200, 200, 1)',
+													//hoverBorderColor : 'rgba(200, 200, 200, 1)',
+													pointBackgroundColor : 'rgb(200, 0, 0)',	
+													pointRadius : '10',		
+													pointHoverRadius : '10',										
+													data : score
+												} ]
+											};
+
+											console.log(chartdata);
+
+											var ctx = document.getElementById(
+													"myChart").getContext("2d");
+											//ctx.canvas.width = 250px;
+											//ctx.canvas.height = 500px;
+
+											var myChart = new Chart(ctx, {
+												type : "line",
+												data : chartdata,
+												
+												options: {
+											            tooltips: {
+											                enabled: true,
+											                mode: 'single',
+											                callbacks: {
+											                    label: function(tooltipItems, data) { 
+											                        return tooltipItems.yLabel + 'Recommendation by Steve Smith (Sr. Advisor)';
+											                    },
+											                     labelColor: function(tooltipItems, data) {
+												                    return {
+												                        borderColor: 'rgb(255, 0, 0)',
+												                        backgroundColor: 'rgb(255, 0, 0)'
+												                    }
+												                }
+											                }
+											            }											            
+											     }
+											});
+										}
+									});
+						});
+	</script>
+
+
+</body>
+</html>
